@@ -1,0 +1,34 @@
+{
+  "name": "cdnme",
+  "version": "0.0.1",
+  "description": " Prototyping tool to quickly search and inject CDN links of popular libraries into html files.",
+  "main": "cdnMe.js",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "inquirer": "^1.1.2",
+    "progress": "^1.1.8",
+    "request": "^2.74.0"
+  },
+  "bin": {
+    "cdnMe": "cdnMe.js"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mimieam/cdnMe.js.git"
+  },
+  "keywords": [
+    "cdn",
+    "links",
+    "tool"
+  ],
+  "author": "Miezan Echimane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mimieam/cdnMe.js/issues"
+  },
+  "homepage": "https://github.com/Mimieam/cdnMe.js#readme"
+}
