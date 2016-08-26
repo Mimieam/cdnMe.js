@@ -1,6 +1,6 @@
 {
   "name": "cdnme",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": " Prototyping tool to quickly search and inject CDN links of popular libraries into html files.",
   "main": "cdnMe.js",
   "dependencies": {
@@ -22,7 +22,8 @@
   },
   "keywords": [
     "cdn",
-    "links",
+    "url",
+    "link",
     "tool"
   ],
   "author": "Miezan Echimane",
