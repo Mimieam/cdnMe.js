@@ -7,12 +7,11 @@
  * Warning: THIS is NOT a DEPENDENCY MANAGEMENT Tool
  */
 
-const program = require('commander');
-
 var fs = require('fs');
 var readline = require('readline');
 var stream = require('stream');
 var request = require("request");
+var program = require('commander');
 var inquirer = require("inquirer");
 
 /* regex heavily inspired from wiredep*/
@@ -109,7 +108,7 @@ function cdnMe(htmlSrcFile, libLinks) {
     });
     this.isPresent = (x) => {
         if (this.blockStr.includes(x)) {
-            console.log(x, " AlREADY ADDED...")
+            console.log(x, " AlREADY ADDED...\n")
         }
         return this.blockStr.includes(x)
     }
@@ -157,48 +156,29 @@ function findLibrary(library, version) {
     });
 }
 
-var htmlSrcFile = "index.html"
-
-let searchAndIinject = (library, htmlFile, options) => {
-    // console.log(library, htmlFile)
+let searchAndInject = (library, htmlFile) => {
     var req = findLibrary(library, "")
         // var req = findLibrary("Phaser", "2.2.*")
     req.then((val) => {
         var libLinks = val
-        console.log("Injecting =>\n\t", val)
+        console.log("Injecting =>\t", val.js)
         var _cdnMe = new cdnMe(htmlFile, libLinks)
     }).catch((err) => {
         console.log("Error ", err)
     })
-        .then((err) => {
-            Error(err)
-        })
+    .then((err) => {
+        Error(err)
+    })
 }
 
 
 program
-// .version('0.0.1')
-    .command('<cdnMe> [library] [htmlFile]')
+    .version('1.0.0')
+    // .command('cdnMe <library> <htmlFile>', {isDefault: true})
     .description('inject a CDN link into index.html')
-    // .option('-v , --version [version_number]', 'select a version, if the version is not available the lastest version will be used')
-    .action(searchAndIinject);
+    .action(searchAndInject);
 program.parse(process.argv);
-// searchAndIinject()
+
 
 if (program.args.length === 0) program.help();
 
-// var questions =  {
-//     type: "list",
-//     name: "checklib",
-//     message: "which library again?",
-//     choices: [
-//       "Primaria",
-//       "Secundaria",
-//       // new inquirer.Separator(),
-//       "Bachillerato",
-//      ]
-//     }
-
-// inquirer.prompt([ questions/* Pass your questions in here */ ], function(answers) {
-//     // Use user feedback for... whatever!!
-// });
