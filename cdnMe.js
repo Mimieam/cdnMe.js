@@ -178,18 +178,27 @@ let searchAndIinject = (library, htmlFile, options) => {
 
 program
 // .version('0.0.1')
-.command('<cdnMe> [library] [htmlFile]', {
-    isDefault: true
-})
-    .option('-v , --version [version_number]', 'select a version, if the version is not available the lastest version will be used')
-    .description('inject CDN link into index.html')
+    .command('<cdnMe> [library] [htmlFile]')
+    .description('inject a CDN link into index.html')
+    // .option('-v , --version [version_number]', 'select a version, if the version is not available the lastest version will be used')
     .action(searchAndIinject);
 program.parse(process.argv);
 // searchAndIinject()
 
 if (program.args.length === 0) program.help();
 
+// var questions =  {
+//     type: "list",
+//     name: "checklib",
+//     message: "which library again?",
+//     choices: [
+//       "Primaria",
+//       "Secundaria",
+//       // new inquirer.Separator(),
+//       "Bachillerato",
+//      ]
+//     }
 
-inquirer.prompt([ /* Pass your questions in here */ ], function(answers) {
-    // Use user feedback for... whatever!!
-});
+// inquirer.prompt([ questions/* Pass your questions in here */ ], function(answers) {
+//     // Use user feedback for... whatever!!
+// });
