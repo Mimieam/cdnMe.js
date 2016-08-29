@@ -156,7 +156,7 @@ function findLibrary(library, version) {
     });
 }
 
-let searchAndInject = (library, htmlFile) => {
+let searchAndInject = (library, htmlFile, options) => {
     var req = findLibrary(library, "")
         // var req = findLibrary("Phaser", "2.2.*")
     req.then((val) => {
@@ -171,12 +171,19 @@ let searchAndInject = (library, htmlFile) => {
     })
 }
 
+let insertJSBlock = (library, htmlFile, options) => {
+    console.log( "Comming Soon Sorry...")
+    process.exit(0);  // let's not trigger program.help() ^^
+}
 
 program
-    .version('1.0.0')
+    .version('1.1.0')
+    .option('-j, --jsblock <htmlFile>', 'auto insert jsBlock', insertJSBlock)
+    .usage('[options] <library> <htmlFile>')
     // .command('cdnMe <library> <htmlFile>', {isDefault: true})
     .description('inject a CDN link into index.html')
-    .action(searchAndInject);
+    .action(searchAndInject)
+
 program.parse(process.argv);
 
 

@@ -5,7 +5,7 @@ cdnMe searches and injects cdn links from `jsdelivr`. The latest available versi
 
 ##Usage
 
-Add the following your index.html
+Add the following in your index.html
 ```
 <!-- cdnMe:js -->
 <!-- endcdnMe -->
