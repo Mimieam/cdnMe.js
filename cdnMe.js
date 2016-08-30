@@ -107,7 +107,7 @@ function cdnMe(htmlSrcFile, libLinks) {
     });
 
     this.rl.on('close', () => {
-        console.log("Closing")
+        // console.log("Closing")
     });
     this.isPresent = (x) => {
         if (this.blockStr.includes(x)) {
@@ -184,14 +184,12 @@ function InjectJSCommentBlock(htmlSrcFile) {
         start: 0
     });
     var rl2 = readline.createInterface(ins, out);
-    console.log("InjectJSCommentBlock =>>", path.resolve(htmlSrcFile))
     var ln = 1
     rl2.on('line', (line) => {
         try{
             if (line.match(regex.html.startJsBlock) || line.match(regex.html.endBlock)  ) {
                 throw new CDNException(`Couldn't autoInject cdnMe Tags \n\t  Tags already FOUND => ${line} (@ln ${ln})`)
             } else if (line.match(regex.html.detect.body)) {
-                console.log("BODY TAG FOUND ======>", line, ln)
                 console.log(`cdnMe Tags Injected SUCCESSFULLY - (@ln ${ln})`)
                 line = "\t<!-- cdnMe:js -->\r\n\t<!-- endcdnMe -->\r\n" + line
             }
@@ -205,12 +203,11 @@ function InjectJSCommentBlock(htmlSrcFile) {
 
 
     rl2.on('close', () => {
-        console.log("Closing rl2 - Done Injecting JS Comment Block")
+        // console.log("Closing rl2 - Done Injecting JS Block")
     });
 }
 
 let insertJSBlock = (htmlFile) => {
-    console.log(`Comming Soon Sorry... ${htmlFile}`)
     InjectJSCommentBlock(htmlFile)
 }
 
