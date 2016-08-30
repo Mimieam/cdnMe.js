@@ -13,6 +13,7 @@ var stream = require('stream');
 var request = require("request");
 var program = require('commander');
 var inquirer = require("inquirer");
+var path = require('path');
 
 /* regex heavily inspired from wiredep*/
 var regex = {
@@ -23,7 +24,8 @@ var regex = {
         endBlock: /(([ \t]*)<!--\s*endcdnMe\s*-->)/gi,
         detect: {
             js: /<script.*src=['"]([^'"]+)/gi,
-            css: /<link.*href=['"]([^'"]+)/gi
+            css: /<link.*href=['"]([^'"]+)/gi,
+            body: /<\/body>/gi,
         },
     }
 }
@@ -44,6 +46,7 @@ function buildUrl(pkg) {
 function CDNException(message) {
     this.message = message;
     this.name = "CDNException";
+    this.toString = () => {return `${this.name}: ${this.message}`}
 }
 
 function cdnMe(htmlSrcFile, libLinks) {
@@ -104,7 +107,7 @@ function cdnMe(htmlSrcFile, libLinks) {
     });
 
     this.rl.on('close', () => {
-
+        console.log("Closing")
     });
     this.isPresent = (x) => {
         if (this.blockStr.includes(x)) {
@@ -112,6 +115,7 @@ function cdnMe(htmlSrcFile, libLinks) {
         }
         return this.blockStr.includes(x)
     }
+
     // save() {
     //     this.outstream = fs.createWriteStream(htmlSrcFile);
     //     this.outstream.write()
@@ -166,15 +170,51 @@ let searchAndInject = (library, htmlFile, options) => {
     }).catch((err) => {
         console.log("Error ", err)
     })
-    .then((err) => {
-        Error(err)
-    })
+        .then((err) => {
+            Error(err)
+        })
 }
 
-let insertJSBlock = (library, htmlFile, options) => {
-    console.log( "Comming Soon Sorry...")
-    process.exit(0);  // let's not trigger program.help() ^^
+function InjectJSCommentBlock(htmlSrcFile) {
+    var ins = fs.createReadStream(htmlSrcFile);
+    // ins.pipe(process.stdout);
+    var out = fs.createWriteStream(htmlSrcFile, {
+        flags: 'r+',
+        mode: 0o777,
+        start: 0
+    });
+    var rl2 = readline.createInterface(ins, out);
+    console.log("InjectJSCommentBlock =>>", path.resolve(htmlSrcFile))
+    var ln = 1
+    rl2.on('line', (line) => {
+        try{
+            if (line.match(regex.html.startJsBlock) || line.match(regex.html.endBlock)  ) {
+                throw new CDNException(`Couldn't autoInject cdnMe Tags \n\t  Tags already FOUND => ${line} (@ln ${ln})`)
+            } else if (line.match(regex.html.detect.body)) {
+                console.log("BODY TAG FOUND ======>", line, ln)
+                console.log(`cdnMe Tags Injected SUCCESSFULLY - (@ln ${ln})`)
+                line = "\t<!-- cdnMe:js -->\r\n\t<!-- endcdnMe -->\r\n" + line
+            }
+            out.write(line + "\r\n")
+        } catch(e){
+            console.log(e.toString())
+            process.exit(0)
+        }
+        ln +=1 // increment line number
+    });
+
+
+    rl2.on('close', () => {
+        console.log("Closing rl2 - Done Injecting JS Comment Block")
+    });
 }
+
+let insertJSBlock = (htmlFile) => {
+    console.log(`Comming Soon Sorry... ${htmlFile}`)
+    InjectJSCommentBlock(htmlFile)
+}
+
+var optionFlag = false
 
 program
     .version('1.1.0')
@@ -186,6 +226,14 @@ program
 
 program.parse(process.argv);
 
+// detect if any option (beside version) is being used and set the optionFlag to true
+program.options.map((x) => {
+    var optionName = x.long.slice(2)
+    if (optionName != "version") {
+        if (program[optionName]) {
+            optionFlag = true
+        }
+    }
+})
 
-if (program.args.length === 0) program.help();
-
+if (!optionFlag && program.args.length === 0) program.help();

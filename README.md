@@ -3,9 +3,10 @@ A Rapid Prototyping tool to quickly search and inject CDN links of popular libra
 
 cdnMe searches and injects cdn links from `jsdelivr`. The latest available version is selected by default. The next version of cdnMe will allow specifying different versions.
 
+
 ##Usage
 
-Add the following in your index.html
+Add the following in your index.html ( see [update 1.1.0](#110) for auto Inject )
 ```
 <!-- cdnMe:js -->
 <!-- endcdnMe -->
@@ -27,3 +28,10 @@ and Voila!
     <!-- endcdnMe -->
 </body>
 ```
+
+
+##Updates
+#### 1.1.0
+* autoInject tag options added.
+
+    Running `cdnMe -j <htmlFilePath>` will Inject the **cdnMe** tags before the last `</body>` tag.
