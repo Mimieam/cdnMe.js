@@ -26,6 +26,7 @@ var regex = {
             js: /<script.*src=['"]([^'"]+)/gi,
             css: /<link.*href=['"]([^'"]+)/gi,
             body: /<\/body>/gi,
+            head: /<\/head>/gi,
         },
     }
 }
@@ -80,6 +81,7 @@ function cdnMe(htmlSrcFile, libLinks) {
             this.cssFlag = false
             if (libLinks.css.length > 0) {
                 line = "\t" + libLinks.css.map((x) => {
+                    console.log(x)
                     return TEMPLATES.CSS.replace('{{filePath}}', x)
                 }).join("\n\t") + "\n" + line
             }
@@ -175,7 +177,7 @@ let searchAndInject = (library, htmlFile, options) => {
         })
 }
 
-function InjectJSCommentBlock(htmlSrcFile) {
+function InjectJSAndCSSCommentBlock(htmlSrcFile) {
     var ins = fs.createReadStream(htmlSrcFile);
     // ins.pipe(process.stdout);
     var out = fs.createWriteStream(htmlSrcFile, {
@@ -187,10 +189,15 @@ function InjectJSCommentBlock(htmlSrcFile) {
     var ln = 1
     rl2.on('line', (line) => {
         try{
-            if (line.match(regex.html.startJsBlock) || line.match(regex.html.endBlock)  ) {
+            if (line.match(regex.html.startCssBlock)) {
+                throw new CDNException(`Couldn't autoInject cdnMe Tags \n\t  Tags already FOUND => ${line} (@ln ${ln})`)
+            } else if (line.match(regex.html.detect.head)) {
+                console.log(`cdnMe css - Tags Injected SUCCESSFULLY - (@ln ${ln})`)
+                line = "\t<!-- cdnMe:css -->\r\n\t<!-- endcdnMe -->\r\n" + line
+            }else if (line.match(regex.html.startJsBlock) || line.match(regex.html.endBlock)  ) {
                 throw new CDNException(`Couldn't autoInject cdnMe Tags \n\t  Tags already FOUND => ${line} (@ln ${ln})`)
             } else if (line.match(regex.html.detect.body)) {
-                console.log(`cdnMe Tags Injected SUCCESSFULLY - (@ln ${ln})`)
+                console.log(`cdnMe js - Tags Injected SUCCESSFULLY - (@ln ${ln})`)
                 line = "\t<!-- cdnMe:js -->\r\n\t<!-- endcdnMe -->\r\n" + line
             }
             out.write(line + "\r\n")
@@ -208,14 +215,15 @@ function InjectJSCommentBlock(htmlSrcFile) {
 }
 
 let insertJSBlock = (htmlFile) => {
-    InjectJSCommentBlock(htmlFile)
+    InjectJSAndCSSCommentBlock(htmlFile)
 }
 
 var optionFlag = false
 
 program
     .version('1.1.0')
-    .option('-j, --jsblock <htmlFile>', 'auto insert jsBlock', insertJSBlock)
+    .option('-j, --jsblock <htmlFile>', 'auto insert jsBlock and cssBlock', insertJSBlock)
+    // .option('-c, --cssblock <htmlFile>', 'auto insert cssBlock', insertCSSBlock)
     .usage('[options] <library> <htmlFile>')
     // .command('cdnMe <library> <htmlFile>', {isDefault: true})
     .description('inject a CDN link into index.html')

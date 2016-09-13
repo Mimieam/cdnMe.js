@@ -24,7 +24,8 @@
     "cdn",
     "url",
     "link",
-    "tool"
+    "tool",
+    "jsdelivr"
   ],
   "author": "Miezan Echimane",
   "license": "MIT",
