@@ -33,7 +33,7 @@ and Voila!
 ##Updates
 #### 1.2.0
 * Both CSS and JS Tags are now auto injected with option `-j`.
-* cdnme has now support for CSS libraries.
+* **cdnme** has now support for CSS libraries.
 
 #### 1.1.0
 * autoInject tag options added.
