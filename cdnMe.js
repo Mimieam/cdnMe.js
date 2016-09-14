@@ -69,7 +69,7 @@ function cdnMe(htmlSrcFile, libLinks) {
     this.jsFlag = false
     this.cssFlag = false
     this.endBlock = false
-    this.blockStr = ""
+    this.blockStr = ""  // a merge of both css and js block
 
     this.instream = fs.createReadStream(htmlSrcFile);
     // this.instream.pipe(process.stdout);
@@ -83,13 +83,16 @@ function cdnMe(htmlSrcFile, libLinks) {
     this.rl.on('line', (line) => {
         // find starting css block
         if (line.match(regex.html.startCssBlock)) {
+            this.blockStr += line
             this.cssFlag = true
+        }
+        if (this.cssFlag) {
+            this.blockStr += line
         }
         if (this.cssFlag && line.match(regex.html.endBlock)) {
             this.cssFlag = false
             if (libLinks.css.length > 0) {
-                line = "\t" + libLinks.css.map((x) => {
-                    console.log(x)
+                line = libLinks.css.map((x) => {
                     return !this.isPresent(x) ? TEMPLATES.CSS.replace('{{filePath}}', x) : null
                 }).filter((x) => {
                     return x != null
@@ -178,7 +181,7 @@ let searchAndInject = (library, htmlFile, options) => {
         // var req = findLibrary("Phaser", "2.2.*")
     req.then((val) => {
         var libLinks = val
-        console.log("Injecting =>\t", val.js)
+        console.log("Injecting =>\t", val)
         var _cdnMe = new cdnMe(htmlFile, libLinks)
     }).catch((err) => {
         console.log("Error ", err)
