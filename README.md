@@ -1,7 +1,7 @@
 # cdnMe.js
 A Rapid Prototyping tool to quickly search and inject CDN links of popular libraries into html files.
 
-cdnMe searches and injects cdn links from `jsdelivr`. The latest available version is selected by default. The next version of cdnMe will allow specifying different versions.
+cdnMe searches and injects cdn links from `jsdelivr`. The latest available version is selected by default. The next major version of cdnMe will allow specifying different versions.
 
 
 ##Usage
@@ -31,7 +31,13 @@ and Voila!
 
 
 ##Updates
+#### 1.2.0
+* Both CSS and JS Tags are now auto injected with option `-j`.
+* cdnme has now support for CSS libraries.
+
 #### 1.1.0
 * autoInject tag options added.
 
     Running `cdnMe -j <htmlFilePath>` will Inject the **cdnMe** tags before the last `</body>` tag.
+
+

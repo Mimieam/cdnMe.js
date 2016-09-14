@@ -44,6 +44,14 @@ function buildUrl(pkg) {
     return base + [pkg.name, pkg.lastversion, pkg.mainfile || pkg.name].join('/');
 }
 
+function getExtension(fname){
+    /*
+        Thanks VisionN
+        http://stackoverflow.com/a/12900504/623546
+     */
+    return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1)
+}
+
 function CDNException(message) {
     this.message = message;
     this.name = "CDNException";
@@ -82,8 +90,10 @@ function cdnMe(htmlSrcFile, libLinks) {
             if (libLinks.css.length > 0) {
                 line = "\t" + libLinks.css.map((x) => {
                     console.log(x)
-                    return TEMPLATES.CSS.replace('{{filePath}}', x)
-                }).join("\n\t") + "\n" + line
+                    return !this.isPresent(x) ? TEMPLATES.CSS.replace('{{filePath}}', x) : null
+                }).filter((x) => {
+                    return x != null
+                }).join("\r") + line
             }
         }
         // find starting js block
@@ -152,7 +162,8 @@ function findLibrary(library, version) {
                         //         body[0].lastversion = x
                         //         console.log(buildUrl(body[0]))
                         //     })
-                    res.js.push(buildUrl(body[0]))
+                    var ext = getExtension(body[0].mainfile)
+                    ext === 'css' ? res.css.push(buildUrl(body[0])) : res.js.push(buildUrl(body[0]))
                     resolve(res)
                 } else {
                     return reject(new Error(`library ${library} not found`))
