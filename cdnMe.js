@@ -25,7 +25,7 @@ var regex = {
         detect: {
             js: /<script.*src=['"]([^'"]+)/gi,
             css: /<link.*href=['"]([^'"]+)/gi,
-            body: /<\/body>/gi,
+            body: /<body>/gi,
             head: /<\/head>/gi,
         },
     }
@@ -212,7 +212,7 @@ function InjectJSAndCSSCommentBlock(htmlSrcFile) {
                 throw new CDNException(`Couldn't autoInject cdnMe Tags \n\t  Tags already FOUND => ${line} (@ln ${ln})`)
             } else if (line.match(regex.html.detect.body)) {
                 console.log(`cdnMe js - Tags Injected SUCCESSFULLY - (@ln ${ln})`)
-                line = "\t<!-- cdnMe:js -->\r\n\t<!-- endcdnMe -->\r\n" + line
+                line += "\r\n\t<!-- cdnMe:js -->\r\n\t<!-- endcdnMe -->\r\n"
             }
             out.write(line + "\r\n")
         } catch(e){

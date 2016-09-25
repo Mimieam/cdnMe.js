@@ -31,6 +31,10 @@ and Voila!
 
 
 ##Updates
+
+#### 1.2.1
+* patch js tag is now added right after the opening body tag
+
 #### 1.2.0
 * Both CSS and JS Tags are now auto injected with option `-j`.
 * **cdnme** has now support for CSS libraries.
@@ -38,6 +42,6 @@ and Voila!
 #### 1.1.0
 * autoInject tag options added.
 
-    Running `cdnMe -j <htmlFilePath>` will Inject the **cdnMe** tags before the last `</body>` tag.
+    Running `cdnMe -j <htmlFilePath>` will Inject the **cdnMe** tags after opening `<body>` tag.
 
 
