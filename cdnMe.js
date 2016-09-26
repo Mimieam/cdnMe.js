@@ -259,7 +259,7 @@ let insertJSBlock = (htmlFile) => {
 var optionFlag = false
 
 program
-    .version('1.3.0')
+    .version('1.3.1')
     .option('-j, --jsblock <htmlFile>', 'auto insert jsBlock and cssBlock', insertJSBlock)
     // .option('-c, --cssblock <htmlFile>', 'auto insert cssBlock', insertCSSBlock)
     .usage('[options] <library> <htmlFile>')
