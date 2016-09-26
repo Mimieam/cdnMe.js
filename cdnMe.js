@@ -36,12 +36,14 @@ var TEMPLATES = {
 }
 var urls = {
     searchQuery: 'http://api.jsdelivr.com/v1/jsdelivr/libraries?name=',
+    searchParams: '&fields=assets',
     base: '//cdn.jsdelivr.net/'
 }
 
-function buildUrl(pkg) {
+function buildUrl(pkg, filename) {
     var base = urls.base;
-    return base + [pkg.name, pkg.lastversion, pkg.mainfile || pkg.name].join('/');
+    var name = filename
+    return base + [pkg.name, pkg.lastversion, filename|| pkg.mainfile || pkg.name].join('/');
 }
 
 function getExtension(fname){
@@ -50,6 +52,10 @@ function getExtension(fname){
         http://stackoverflow.com/a/12900504/623546
      */
     return fname.slice((Math.max(0, fname.lastIndexOf(".")) || Infinity) + 1)
+}
+
+function isInArray(arr, item){
+    return !!~arr.indexOf(item)
 }
 
 function CDNException(message) {
@@ -118,7 +124,7 @@ function cdnMe(htmlSrcFile, libLinks) {
                 }).join("\r") + line
             }
         }
-        this.outstream.write(line + "\r\n")
+        this.outstream.write(line + "\r")
     });
 
     this.rl.on('close', () => {
@@ -151,15 +157,25 @@ function findLibrary(library, version) {
             }
             // var versions = []
             if (!error && response.statusCode === 200) {
-                // console.log(body[0])
+
+
                 if (body && body[0] != undefined) {
-                    var versions = body[0].versions
-                        .map((x) => {
-                            return x.match('^' + version) ? x : null
-                        })
-                        .filter((x) => {
-                            return x != null
-                        })
+                    var files = body[0].assets[0].files
+                    var _name = body[0].mainfile.split(".")[0] // wow this looks gross...
+                    var name = _name.split('/')
+
+                    var opposite_name_prefix = name.length > 1 ? name[0] +"/":""
+                     opposite_name_prefix = opposite_name_prefix == "js" ? "css/":"js/"
+                    console.log(opposite_name_prefix)
+                    name = name.length > 1 ? name[1]: name[0]
+
+                        // var versions = body[0].versions
+                        //     .map((x) => {
+                        //         return x.match('^' + version) ? x : null
+                        //     })
+                        //     .filter((x) => {
+                        //         return x != null
+                        //     })
                         // generate a link for every version
                         // versions.map((x) => {
                         //         body[0].lastversion = x
@@ -167,6 +183,14 @@ function findLibrary(library, version) {
                         //     })
                     var ext = getExtension(body[0].mainfile)
                     ext === 'css' ? res.css.push(buildUrl(body[0])) : res.js.push(buildUrl(body[0]))
+                    if (ext === 'js') {
+                        console.log(files, name, files.filter((x)=>{return x.includes(`${name}.min.css`)}))
+                        files
+                            .filter((x) => {return x.includes(`${name}.min.css`)})
+                            .map((x) => {res.css.push(buildUrl(body[0], x))} )
+
+                    }
+
                     resolve(res)
                 } else {
                     return reject(new Error(`library ${library} not found`))
@@ -235,7 +259,7 @@ let insertJSBlock = (htmlFile) => {
 var optionFlag = false
 
 program
-    .version('1.2.0')
+    .version('1.3.0')
     .option('-j, --jsblock <htmlFile>', 'auto insert jsBlock and cssBlock', insertJSBlock)
     // .option('-c, --cssblock <htmlFile>', 'auto insert cssBlock', insertCSSBlock)
     .usage('[options] <library> <htmlFile>')

@@ -1,4 +1,6 @@
 # cdnMe.js
+[![NPM](https://nodei.co/npm/cdnme.png?downloads=true)](https://nodei.co/npm/cdnme.png?downloads=true)
+
 A Rapid Prototyping tool to quickly search and inject CDN links of popular libraries into html files.
 
 cdnMe searches and injects cdn links from `jsdelivr`. The latest available version is selected by default. The next major version of cdnMe will allow specifying different versions.
@@ -32,6 +34,9 @@ and Voila!
 
 ##Updates
 
+#### 1.3.0
+* fixed injection for frameworks which provides both css and js files (i.e: bootstraps, foundation, etc..).
+
 #### 1.2.1
 * patch js tag is now added right after the opening body tag
 
@@ -44,4 +49,6 @@ and Voila!
 
     Running `cdnMe -j <htmlFilePath>` will Inject the **cdnMe** tags after opening `<body>` tag.
 
-
+##Thank you!
+Please [**Star the Repos**](https://github.com/Mimieam/cdnMe.js) as it keeps me motivated ^^, and leave me a note in case of issues or suggestions :)<br />
+Thanks for using **cdnMe**
