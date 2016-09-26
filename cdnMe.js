@@ -166,7 +166,6 @@ function findLibrary(library, version) {
 
                     var opposite_name_prefix = name.length > 1 ? name[0] +"/":""
                      opposite_name_prefix = opposite_name_prefix == "js" ? "css/":"js/"
-                    console.log(opposite_name_prefix)
                     name = name.length > 1 ? name[1]: name[0]
 
                         // var versions = body[0].versions
@@ -184,7 +183,6 @@ function findLibrary(library, version) {
                     var ext = getExtension(body[0].mainfile)
                     ext === 'css' ? res.css.push(buildUrl(body[0])) : res.js.push(buildUrl(body[0]))
                     if (ext === 'js') {
-                        console.log(files, name, files.filter((x)=>{return x.includes(`${name}.min.css`)}))
                         files
                             .filter((x) => {return x.includes(`${name}.min.css`)})
                             .map((x) => {res.css.push(buildUrl(body[0], x))} )
